@@ -1,0 +1,17 @@
+{
+  "name": "microgallery-schema",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Canonical schema contracts for MicroGallery archive, gallery, and commerce layers.",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "vitest": "^2.0.5"
+  }
+}

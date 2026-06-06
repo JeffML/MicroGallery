@@ -31,6 +31,7 @@ Owner layer: archive
 Purpose: internal source-of-truth metadata for imported images
 
 ### Required fields
+
 - id: string
 - title: string
 - hidden: boolean
@@ -42,6 +43,7 @@ Purpose: internal source-of-truth metadata for imported images
 - artStatus: candidate | ready | archived
 
 ### Optional fields
+
 - subject: string
 - magnification: string
 - lighting: string[]
@@ -54,6 +56,7 @@ Purpose: internal source-of-truth metadata for imported images
   - capturedAt?: string (ISO 8601)
 
 ### Constraints
+
 - id must be immutable after creation.
 - title may change over time; id must not.
 - hidden only affects archive visibility, not commerce eligibility directly.
@@ -64,6 +67,7 @@ Owner layer: gallery
 Purpose: public-facing curated metadata
 
 ### Required fields
+
 - slug: string
 - archiveId: string
 - title: string
@@ -75,6 +79,7 @@ Purpose: public-facing curated metadata
 - forSale: boolean
 
 ### Optional fields
+
 - subject: string
 - magnification: string
 - lighting: string[]
@@ -89,6 +94,7 @@ Purpose: public-facing curated metadata
   - link?: string
 
 ### Constraints
+
 - slug is immutable once status becomes published.
 - archiveId must reference an existing ArchiveItem.id.
 - published requires non-empty title, shortDescription, displayImage, thumbnail, and collection.
@@ -99,6 +105,7 @@ Owner layer: commerce
 Purpose: sellable option tied to a gallery item
 
 ### Required fields
+
 - sku: string
 - slug: string
 - label: string
@@ -109,12 +116,14 @@ Purpose: sellable option tied to a gallery item
 - active: boolean
 
 ### Optional fields
+
 - squareItemId: string
 - squareVariationId: string
 - inventoryPolicy: string
 - inventoryCount: number
 
 ### Constraints
+
 - sku must be globally unique.
 - slug must reference an existing GalleryItem.slug.
 - priceMinor replaces legacy text price fields.
@@ -125,6 +134,7 @@ Owner layer: commerce
 Purpose: local order tracking and fulfillment state
 
 ### Required fields
+
 - orderId: string
 - slug: string
 - variantSku: string
@@ -133,6 +143,7 @@ Purpose: local order tracking and fulfillment state
 - createdAt: string (ISO 8601)
 
 ### Optional fields
+
 - squareOrderId: string
 - paidAt: string (ISO 8601)
 - customer: object
@@ -142,6 +153,7 @@ Purpose: local order tracking and fulfillment state
 - fulfillmentNotes: string
 
 ### Constraints
+
 - variantSku must reference an existing ProductVariant.sku.
 - slug should match ProductVariant.slug for the same order line.
 
@@ -153,6 +165,7 @@ Purpose: local order tracking and fulfillment state
 - Order.orderId generation: local ULID or UUID v4.
 
 Join paths:
+
 - GalleryItem.archiveId -> ArchiveItem.id
 - ProductVariant.slug -> GalleryItem.slug
 - Order.variantSku -> ProductVariant.sku
@@ -175,6 +188,7 @@ Join paths:
 ## 10. Acceptance Criteria for Phase 2
 
 Phase 2 is complete when:
+
 - All four entities have required and optional fields locked.
 - All enum sets are locked.
 - Identity and join policies are locked.
