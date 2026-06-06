@@ -7,7 +7,7 @@ Single-owner checklist for a one-person project.
 | Phase | Owner | Target Date | Deliverable | Exit Criteria | Status |
 |---|---|---|---|---|---|
 | 1. Field Inventory Matrix | You | 2026-06-06 | Single matrix of all current fields | Every current field maps to exactly one canonical entity and one owner layer | Completed 2026-06-05 |
-| 2. Canonical Entity Spec | You | 2026-06-06 | Final contract for ArchiveItem, GalleryItem, ProductVariant, Order | Required and optional fields, IDs, enums, and price units are locked | Not started |
+| 2. Canonical Entity Spec | You | 2026-06-06 | Final contract for ArchiveItem, GalleryItem, ProductVariant, Order | Required and optional fields, IDs, enums, and price units are locked | Completed 2026-06-06 |
 | 3. Module and Ownership Boundaries | You | 2026-06-07 | Schema location and import boundaries | Archive, gallery, and commerce concerns are separated with no overlap | Not started |
 | 4. TypeScript and Zod Plan | You | 2026-06-07 | Validator implementation checklist per entity | Parse, normalize, and error behavior is documented for each entity | Not started |
 | 5. Adapter Contract Definitions | You | 2026-06-08 | Boundary mappings only (no migration) | Sidecar-to-archive, hotspot-to-gallery, and product linkage contracts are defined | Not started |
