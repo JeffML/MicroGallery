@@ -10,7 +10,7 @@ Single-owner checklist for a one-person project.
 | 2. Canonical Entity Spec           | You   | 2026-06-06  | Final contract for ArchiveItem, GalleryItem, ProductVariant, Order | Required and optional fields, IDs, enums, and price units are locked              | Completed 2026-06-06 |
 | 3. Module and Ownership Boundaries | You   | 2026-06-07  | Schema location and import boundaries                              | Archive, gallery, and commerce concerns are separated with no overlap             | Completed 2026-06-06 |
 | 4. TypeScript and Zod Plan         | You   | 2026-06-07  | Validator implementation checklist per entity                      | Parse, normalize, and error behavior is documented for each entity                | Completed 2026-06-06 |
-| 5. Adapter Contract Definitions    | You   | 2026-06-08  | Boundary mappings only (no migration)                              | Sidecar-to-archive, hotspot-to-gallery, and product linkage contracts are defined | Not started          |
+| 5. Adapter Contract Definitions    | You   | 2026-06-08  | Boundary mappings only (no migration)                              | Sidecar-to-archive, hotspot-to-gallery, and product linkage contracts are defined | Completed 2026-06-07 |
 | 6. Adoption Sequencing             | You   | 2026-06-08  | Rollout sequence and rollback notes                                | Validation order is staged: read-time, write-time, then server boundaries         | Not started          |
 | 7. Governance and Docs             | You   | 2026-06-08  | Schema policy in project docs                                      | New fields require canonical schema updates before implementation                 | Not started          |
 
@@ -25,6 +25,26 @@ Single-owner checklist for a one-person project.
 - Day 1: Finish Phases 1 and 2.
 - Day 2: Finish Phases 3 and 4.
 - Day 3: Finish Phases 5 through 7.
+
+## Phase 6 Rollout Sequence
+
+1. microAlbum read path first
+   Validate sidecar-derived archive records when they are loaded, before enforcing validation on writes. Primary target: microAlbum/src/hooks/useImageFiles.js.
+
+2. microAlbum write path second
+   Validate archive records before persisting sidecars so edited metadata cannot create invalid canonical records. Primary targets: microAlbum/src/lib/sidecar.js and microAlbum/src/components/MetadataPanel.jsx.
+
+3. wallgallery server boundary third
+   Validate incoming hotspot payloads and mapped gallery records at the Netlify API boundary. Primary target: wallgallery/netlify/functions/hotspots.mjs.
+
+4. Commerce and order functions last
+   Apply ProductVariant and OrderRecord validation when checkout and order-processing functions are introduced or updated.
+
+## Phase 6 Rollback Notes
+
+1. Start with read-time validation in non-blocking mode where possible, so invalid legacy records can be reported before writes are rejected.
+2. Only move to write-time rejection after read-path validation shows stable data quality.
+3. Keep API-boundary validation strict once enabled, because server boundaries are the safest enforcement point.
 
 ## Appendix: Archived Detail
 
