@@ -2,6 +2,8 @@
 
 Goal: define one canonical metadata language across archive, gallery, and commerce layers using TypeScript plus Zod, without doing migration or backfill in this phase.
 
+Productization execution is tracked separately in `PRODUCTIZATION_PLAN.md`.
+
 Single-owner checklist for a one-person project.
 
 | Phase                              | Owner | Target Date | Deliverable                                                        | Exit Criteria                                                                     | Status               |
