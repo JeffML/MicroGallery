@@ -1,5 +1,13 @@
 import { parseArchiveItem, parseGalleryItem, parseProductVariant } from "./validators";
-import type { ArchiveItem, ArtStatus, EditionType, FulfillmentType, GalleryItem, ImportedAs, ProductVariant } from "./entities";
+import type {
+  ArchiveItem,
+  ArtStatus,
+  EditionType,
+  FulfillmentType,
+  GalleryItem,
+  ImportedAs,
+  ProductVariant,
+} from "./entities";
 
 export interface LegacySidecarSource {
   title: string;
