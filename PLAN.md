@@ -11,14 +11,14 @@ Single-owner checklist for a one-person project.
 | 3. Module and Ownership Boundaries | You   | 2026-06-07  | Schema location and import boundaries                              | Archive, gallery, and commerce concerns are separated with no overlap             | Completed 2026-06-06 |
 | 4. TypeScript and Zod Plan         | You   | 2026-06-07  | Validator implementation checklist per entity                      | Parse, normalize, and error behavior is documented for each entity                | Completed 2026-06-06 |
 | 5. Adapter Contract Definitions    | You   | 2026-06-08  | Boundary mappings only (no migration)                              | Sidecar-to-archive, hotspot-to-gallery, and product linkage contracts are defined | Completed 2026-06-07 |
-| 6. Adoption Sequencing             | You   | 2026-06-08  | Rollout sequence and rollback notes                                | Validation order is staged: read-time, write-time, then server boundaries         | Not started          |
-| 7. Governance and Docs             | You   | 2026-06-08  | Schema policy in project docs                                      | New fields require canonical schema updates before implementation                 | Not started          |
+| 6. Adoption Sequencing             | You   | 2026-06-08  | Rollout sequence and rollback notes                                | Validation order is staged: read-time, write-time, then server boundaries         | Completed 2026-06-08 |
+| 7. Governance and Docs             | You   | 2026-06-08  | Schema policy in project docs                                      | New fields require canonical schema updates before implementation                 | Completed 2026-06-08 |
 
 ## Week-One Checkpoints
 
 - 2026-06-06 checkpoint: Phases 1 and 2 accepted.
 - 2026-06-07 checkpoint: Phases 3 and 4 accepted.
-- 2026-06-08 checkpoint: Phases 5 through 7 accepted and ready for implementation handoff.
+- 2026-06-08 checkpoint: Phases 5 through 7 accepted.
 
 ## Weekly Focus
 
