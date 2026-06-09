@@ -77,6 +77,7 @@ export interface LegacyProductSource {
   editionType?: EditionType;
   fulfillment?: FulfillmentType;
   active?: boolean;
+  checkoutUrl?: string;
   squareItemId?: string;
   squareVariationId?: string;
   inventoryPolicy?: string;
@@ -91,6 +92,7 @@ export interface ProductVariantAdapterOptions {
   editionType?: EditionType;
   fulfillment?: FulfillmentType;
   active?: boolean;
+  checkoutUrl?: string;
   squareItemId?: string;
   squareVariationId?: string;
   inventoryPolicy?: string;
@@ -102,7 +104,7 @@ function normalizeDollarsToMinorUnits(value: string | number): number {
     if (!Number.isFinite(value)) {
       throw new TypeError("Price must be a finite number.");
     }
-    return Number.isInteger(value) ? value : Math.round(value * 100);
+    return Math.round(value * 100);
   }
 
   const trimmed = value.trim();
@@ -199,6 +201,7 @@ export function adaptLegacyProductToProductVariant(
     editionType,
     fulfillment,
     active,
+    checkoutUrl: options.checkoutUrl ?? source.checkoutUrl,
     squareItemId: options.squareItemId ?? source.squareItemId,
     squareVariationId: options.squareVariationId ?? source.squareVariationId,
     inventoryPolicy: options.inventoryPolicy ?? source.inventoryPolicy,

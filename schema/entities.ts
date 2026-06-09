@@ -3,6 +3,7 @@ export type GalleryStatus = "draft" | "published";
 export type EditionType = "open" | "limited" | "digital";
 export type FulfillmentType = "ship" | "local-pickup" | "digital";
 export type OrderStatus = "pending" | "paid" | "fulfilling" | "shipped" | "completed" | "canceled";
+export type FulfillmentState = "needs-printing" | "ready-to-ship" | "shipped" | "completed";
 export type ImportedAs = "copy" | "move";
 
 export interface ArchiveItem {
@@ -64,6 +65,7 @@ export interface ProductVariant {
   editionType: EditionType;
   fulfillment: FulfillmentType;
   active: boolean;
+  checkoutUrl?: string;
   squareItemId?: string;
   squareVariationId?: string;
   inventoryPolicy?: string;
@@ -76,6 +78,7 @@ export interface OrderRecord {
   variantSku: string;
   quantity: number;
   status: OrderStatus;
+  fulfillmentState?: FulfillmentState;
   createdAt: string;
   squareOrderId?: string;
   paidAt?: string;

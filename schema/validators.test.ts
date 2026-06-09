@@ -35,6 +35,22 @@ describe("archiveItem parser", () => {
       }),
     ).toThrow();
   });
+
+  it("normalizes finished to ready for archive status", () => {
+    const value = parseArchiveItem({
+      id: "a",
+      title: "x",
+      hidden: false,
+      sourceFile: "x.jpg",
+      importedAs: "copy",
+      importedAt: "2026-06-06T12:00:00Z",
+      pixelWidth: 100,
+      pixelHeight: 100,
+      artStatus: "finished",
+    });
+
+    expect(value.artStatus).toBe("ready");
+  });
 });
 
 describe("galleryItem parser", () => {
@@ -69,6 +85,29 @@ describe("galleryItem parser", () => {
       }),
     ).toThrow();
   });
+
+  it("rejects hotspot values outside 0-100 bounds", () => {
+    expect(() =>
+      parseGalleryItem({
+        slug: "amber-drift",
+        archiveId: "id-1",
+        title: "Amber Drift",
+        shortDescription: "Botanical micrograph",
+        collection: "Botanical",
+        displayImage: "/images/amber-drift.jpg",
+        thumbnail: "/images/amber-drift-thumb.jpg",
+        status: "draft",
+        forSale: false,
+        hotspot: {
+          x: 101,
+          y: 20,
+          w: 30,
+          h: 40,
+          tooltip: "Example",
+        },
+      }),
+    ).toThrow();
+  });
 });
 
 describe("productVariant parser", () => {
@@ -82,6 +121,7 @@ describe("productVariant parser", () => {
       editionType: "open",
       fulfillment: "ship",
       active: true,
+      checkoutUrl: "https://square.link/u/example",
     });
 
     expect(value.priceMinor).toBe(6500);
@@ -101,6 +141,22 @@ describe("productVariant parser", () => {
       }),
     ).toThrow();
   });
+
+  it("rejects invalid checkout URLs", () => {
+    expect(() =>
+      parseProductVariant({
+        sku: "AMBER-8X10-OPEN",
+        slug: "amber-drift",
+        label: "8x10 signed print",
+        priceMinor: 6500,
+        currency: "USD",
+        editionType: "open",
+        fulfillment: "ship",
+        active: true,
+        checkoutUrl: "not-a-url",
+      }),
+    ).toThrow();
+  });
 });
 
 describe("orderRecord parser", () => {
@@ -111,6 +167,7 @@ describe("orderRecord parser", () => {
       variantSku: "AMBER-8X10-OPEN",
       quantity: 1,
       status: "paid",
+      fulfillmentState: "needs-printing",
       createdAt: "2026-06-06T12:00:00Z",
       customer: { email: "buyer@example.com" },
     });
@@ -126,6 +183,20 @@ describe("orderRecord parser", () => {
         variantSku: "AMBER-8X10-OPEN",
         quantity: 0,
         status: "pending",
+        createdAt: "2026-06-06T12:00:00Z",
+      }),
+    ).toThrow();
+  });
+
+  it("rejects unsupported fulfillment states", () => {
+    expect(() =>
+      parseOrderRecord({
+        orderId: "01JY2KCA3GS5N6W8Y8S6D29RQR",
+        slug: "amber-drift",
+        variantSku: "AMBER-8X10-OPEN",
+        quantity: 1,
+        status: "paid",
+        fulfillmentState: "queued",
         createdAt: "2026-06-06T12:00:00Z",
       }),
     ).toThrow();

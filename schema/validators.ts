@@ -2,10 +2,14 @@ import { z } from "zod";
 import type { ArchiveItem, GalleryItem, OrderRecord, ProductVariant } from "./entities";
 
 export const artStatusSchema = z.enum(["candidate", "ready", "archived"]);
+export const archiveArtStatusInputSchema = z
+  .union([artStatusSchema, z.literal("finished")])
+  .transform((value) => (value === "finished" ? "ready" : value));
 export const galleryStatusSchema = z.enum(["draft", "published"]);
 export const editionTypeSchema = z.enum(["open", "limited", "digital"]);
 export const fulfillmentTypeSchema = z.enum(["ship", "local-pickup", "digital"]);
 export const orderStatusSchema = z.enum(["pending", "paid", "fulfilling", "shipped", "completed", "canceled"]);
+export const fulfillmentStateSchema = z.enum(["needs-printing", "ready-to-ship", "shipped", "completed"]);
 export const importedAsSchema = z.enum(["copy", "move"]);
 
 const isoDateTimeSchema = z.string().datetime({ offset: true });
@@ -19,7 +23,7 @@ export const archiveItemSchema = z.object({
   importedAt: isoDateTimeSchema,
   pixelWidth: z.number().int().nonnegative(),
   pixelHeight: z.number().int().nonnegative(),
-  artStatus: artStatusSchema,
+  artStatus: archiveArtStatusInputSchema,
   subject: z.string().optional(),
   magnification: z.string().optional(),
   lighting: z.array(z.string()).optional(),
@@ -37,12 +41,12 @@ export const archiveItemSchema = z.object({
 
 const galleryHotspotSchema = z
   .object({
-    x: z.number().optional(),
-    y: z.number().optional(),
-    w: z.number().optional(),
-    h: z.number().optional(),
-    tooltip: z.string().optional(),
-    link: z.string().optional(),
+    x: z.number().min(0).max(100),
+    y: z.number().min(0).max(100),
+    w: z.number().min(0).max(100),
+    h: z.number().min(0).max(100),
+    tooltip: z.string().trim().min(1),
+    link: z.string().url().optional(),
   })
   .optional();
 
@@ -90,6 +94,7 @@ export const productVariantSchema = z.object({
   editionType: editionTypeSchema,
   fulfillment: fulfillmentTypeSchema,
   active: z.boolean(),
+  checkoutUrl: z.string().url().optional(),
   squareItemId: z.string().optional(),
   squareVariationId: z.string().optional(),
   inventoryPolicy: z.string().optional(),
@@ -102,6 +107,7 @@ export const orderRecordSchema = z.object({
   variantSku: z.string().min(1),
   quantity: z.number().int().min(1),
   status: orderStatusSchema,
+  fulfillmentState: fulfillmentStateSchema.optional(),
   createdAt: isoDateTimeSchema,
   squareOrderId: z.string().optional(),
   paidAt: isoDateTimeSchema.optional(),

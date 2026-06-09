@@ -11,6 +11,11 @@ describe("normalizeDollarsToMinorUnits", () => {
     expect(normalizeDollarsToMinorUnits("$65")).toBe(6500);
     expect(normalizeDollarsToMinorUnits("$65.25")).toBe(6525);
   });
+
+  it("treats numeric inputs as dollars", () => {
+    expect(normalizeDollarsToMinorUnits(65)).toBe(6500);
+    expect(normalizeDollarsToMinorUnits(65.25)).toBe(6525);
+  });
 });
 
 describe("adaptLegacySidecarToArchiveItem", () => {
@@ -73,9 +78,10 @@ describe("adaptLegacyProductToProductVariant", () => {
     const value = adaptLegacyProductToProductVariant(
       {
         label: "8x10 signed print",
-        price: "$65",
+        price: 65,
         editionType: "open",
         fulfillment: "ship",
+        checkoutUrl: "https://square.link/u/example",
       },
       {
         sku: "AMBER-8X10-OPEN",
@@ -86,5 +92,6 @@ describe("adaptLegacyProductToProductVariant", () => {
     expect(value.sku).toBe("AMBER-8X10-OPEN");
     expect(value.priceMinor).toBe(6500);
     expect(value.currency).toBe("USD");
+    expect(value.checkoutUrl).toBe("https://square.link/u/example");
   });
 });
