@@ -65,9 +65,9 @@ Tasks:
 - [x] Load gallery-items.json and products.json into wallgallery read-path. _(Step 1)_
 - [x] Map hotspots to product variants via slug normalization. _(commerce-mapping.mjs — Step 2)_
 - [x] Render variant selector on wallgallery viewer popup. _(Step 3)_
-- [ ] Render Buy button wired to selected variant checkoutUrl. _(Step 4)_
-- [ ] Ensure UI disables buy action for inactive or invalid variants. _(Step 4/5)_
-- [ ] Validate variant record before render and before purchase action. _(Step 5)_
+- [x] Render Buy button wired to selected variant checkoutUrl. _(Step 4)_
+- [x] Ensure UI disables buy action for inactive or invalid variants. _(Step 4)_
+- [x] Validate variant record before render and before purchase action. _(Step 5)_
 
 Phase notes:
 
