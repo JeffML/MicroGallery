@@ -9,6 +9,14 @@ Goal: ship a minimal, sellable MicroGallery workflow from curated image to succe
 - wallgallery has API boundary validation for hotspots.
 - Commerce flow is architected but not yet operational.
 
+## Decision Rules (Locked)
+
+- `microAlbum` is the source of truth for saleable inventory metadata.
+- `wallgallery` is the first customer-facing buy-flow host.
+- Channel pricing and offer shape may differ by surface (for example framed wallgallery offers vs unframed or custom-size offers from microAlbum).
+- `wallgallery` offer files are treated as derived channel projections, not the long-term inventory source of truth.
+- Canonical schema in `MicroGallery/schema` remains the contract between systems.
+
 ## Execution Sequence
 
 Run phases in order. Do not begin a phase until all exit criteria in the previous phase are met.
@@ -26,12 +34,12 @@ Objective: align canonical schemas with architecture assumptions before building
 
 Tasks:
 
-- [ ] Resolve status vocabulary: decide whether `finished` maps to existing `ready` or becomes a new canonical status.
-- [ ] Add optional `checkoutUrl` on `ProductVariant` for Level 1 manual Square links.
-- [ ] Add explicit fulfillment-state field on `OrderRecord` (for example `needs-printing`, `ready-to-ship`, `shipped`).
-- [ ] Tighten hotspot validation constraints to match API boundary behavior.
-- [ ] Confirm and document money conversion rule: external dollars to canonical `priceMinor` cents.
-- [ ] Update `schema/entities.ts`, `schema/validators.ts`, `schema/adapters.ts`, and tests.
+- [x] Resolve status vocabulary: `finished` input is normalized to canonical `ready`.
+- [x] Add optional `checkoutUrl` on `ProductVariant` for Level 1 manual Square links.
+- [x] Add explicit fulfillment-state field on `OrderRecord`.
+- [x] Tighten hotspot validation constraints to match API boundary behavior.
+- [x] Confirm and document money conversion rule: external dollars to canonical `priceMinor` cents.
+- [x] Update `schema/entities.ts`, `schema/validators.ts`, `schema/adapters.ts`, and tests.
 
 Primary repos/files:
 
@@ -42,9 +50,9 @@ Primary repos/files:
 
 Exit criteria:
 
-- All schema delta tests pass.
-- Canonical contracts cover Level 1 checkout-link flow.
-- Architecture language and canonical enums/fields are reconciled.
+- [x] All schema delta tests pass.
+- [x] Canonical contracts cover Level 1 checkout-link flow.
+- [x] Architecture language and canonical enums/fields are reconciled.
 
 ## P1 - MVP Sell Path (Manual Square Links)
 
@@ -53,10 +61,15 @@ Objective: enable real purchases quickly with the least new code.
 Tasks:
 
 - [ ] Pick one pilot item and 2-3 variants.
-- [ ] Store manual Square payment link per variant in commerce metadata.
-- [ ] Render variant selector and Buy button on public item page.
+- [x] Store manual Square payment link per variant in commerce metadata.
+- [ ] Render variant selector and Buy button on wallgallery public item page.
 - [ ] Ensure UI disables buy action for inactive or invalid variants.
 - [ ] Validate variant record before render and before purchase action.
+
+Phase notes:
+
+- Pilot channel host is `wallgallery`.
+- Pilot offer records in `wallgallery` are temporary channel projections until promotion from `microAlbum` is automated.
 
 Exit criteria:
 
@@ -70,9 +83,10 @@ Objective: remove fragile manual JSON edits.
 
 Tasks:
 
-- [ ] Add promotion command to create or update gallery records from archive metadata.
+- [ ] Add promotion command to create or update wallgallery channel records from microAlbum archive metadata.
 - [ ] Enforce canonical validation during promotion.
 - [ ] Apply publish and sell state gates (`draft`, `published`, `forSale`).
+- [ ] Allow channel-specific offer overrides (pricing, framing, size options) while keeping source-of-truth ownership in microAlbum.
 - [ ] Emit actionable errors when required display or commerce fields are missing.
 
 Exit criteria:
@@ -135,7 +149,7 @@ Exit criteria:
 
 ## Milestone Checklist
 
-- [ ] M0 complete: schema delta pack merged and tests green.
+- [x] M0 complete: schema delta pack merged and tests green.
 - [ ] M1 complete: one live sale path verified.
 - [ ] M2 complete: promotion command and validation gate in place.
 - [ ] M3 complete: server-side commerce boundary online.
@@ -150,4 +164,4 @@ Exit criteria:
 
 ## Immediate Next Step
 
-Start P0 and implement the minimal schema delta set required for P1 manual payment links: status vocabulary decision, `checkoutUrl`, fulfillment state, and tests.
+Complete remaining P1 work in `wallgallery`: render variant selection and Buy action against manual `checkoutUrl`, then run one end-to-end preview purchase test.
