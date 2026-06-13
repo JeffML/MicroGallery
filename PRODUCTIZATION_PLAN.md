@@ -72,49 +72,62 @@ Tasks:
 Phase notes:
 
 - Pilot channel host is `wallgallery`.
-- Pilot offer records in `wallgallery` are temporary channel projections until promotion from `microAlbum` is automated.
+- The `products.json` / manual Square link approach is a **stepping stone only**. It proved the UI pattern (variant selector, Buy button, mapping logic) but does not scale.
+- The real source of pricing data is the `price` field already present in hotspot metadata — the gallery is live with prices today.
+- P1 buy flow will be **retired** once P3 (Square Checkout API) is in place.
 
 Exit criteria:
 
-- At least one published item can be purchased end-to-end through Square.
-- Variant selected by user maps to the correct payment link.
-- No client-side secrets are used.
+- At least one published item can be purchased end-to-end through Square. ✅
+- Variant selected by user maps to the correct payment link. ✅
+- No client-side secrets are used. ✅
 
 ## P2 - Promotion Pipeline (microAlbum to MicroGallery)
 
-Objective: remove fragile manual JSON edits.
+**Status: DEFERRED** — not a prerequisite for live selling.
 
-Tasks:
+Objective: automate creation of wallgallery channel records from microAlbum archive metadata.
+
+Rationale for deferral: wallgallery is already live with prices in hotspot metadata. P3 (Square Checkout API) reads price directly from hotspot data, making manual `products.json` records and a promotion pipeline unnecessary for the core sell path. P2 becomes relevant later if channel-specific offer overrides (framing options, size variants, edition types) need to be managed independently of the hotspot price field.
+
+Tasks (deferred):
 
 - [ ] Add promotion command to create or update wallgallery channel records from microAlbum archive metadata.
 - [ ] Enforce canonical validation during promotion.
 - [ ] Apply publish and sell state gates (`draft`, `published`, `forSale`).
-- [ ] Allow channel-specific offer overrides (pricing, framing, size options) while keeping source-of-truth ownership in microAlbum.
+- [ ] Allow channel-specific offer overrides (pricing, framing, size options).
 - [ ] Emit actionable errors when required display or commerce fields are missing.
 
-Exit criteria:
+## P3 - Square Checkout API Integration
 
-- New item can be promoted with one command.
-- Promotion fails fast with clear validation errors.
-- Promotion output is deterministic for identical input.
+**Status: NEXT PRIORITY** — this replaces the P1 manual-link approach for all items.
 
-## P3 - Commerce Boundary Function
+Objective: dynamically create Square checkout sessions from hotspot price data, eliminating per-item manual Square link setup.
 
-Objective: move purchase resolution behind a controlled server boundary.
+How it works:
+1. Buyer taps "Buy Now" on any priced hotspot
+2. wallgallery POSTs `{ subject, price, size? }` to a Netlify Function
+3. Netlify Function calls Square Checkout API → gets a live `checkoutUrl`
+4. Buyer is redirected to Square, pays, receives email receipt
+5. Square redirects buyer back to wallgallery with order confirmation
 
 Tasks:
 
-- [ ] Implement Netlify function for checkout link resolution (manual-link mode first).
-- [ ] Validate request shape (`slug`, `variantSku`, `quantity`) with canonical input schema.
-- [ ] Reject invalid slug, inactive variant, unpublished item, and malformed requests.
-- [ ] Return deterministic error classes and status codes.
-- [ ] Keep all secrets and provider tokens server-side only.
+- [ ] Set up Square developer account and sandbox credentials.
+- [ ] Create `netlify/functions/checkout.mjs` — calls Square Checkout API with item name + price.
+- [ ] Validate request shape (`subject`, `priceMinor`, `quantity`) server-side before calling Square.
+- [ ] Store `SQUARE_ACCESS_TOKEN` and `SQUARE_LOCATION_ID` as Netlify env vars (never client-side).
+- [ ] Wire wallgallery Buy button to POST to `/api/checkout` instead of opening a static link.
+- [ ] Handle Square sandbox vs. production environment switching.
+- [ ] Test with Square sandbox before going live.
+- [ ] Retire P1 `products.json` / manual link approach once P3 is validated.
 
 Exit criteria:
 
-- Frontend calls one server endpoint for commerce action.
-- Boundary responses are stable and test-covered.
-- Preview and local runs do not affect production commerce data.
+- Any hotspot with a `price` field can be purchased without pre-creating a Square link.
+- Square API key never appears in client-side code or network responses.
+- Sandbox test purchase completes end-to-end with email receipt.
+- Production and sandbox environments are switched by env var only.
 
 ## P4 - Order Signal and Fulfillment Queue
 
