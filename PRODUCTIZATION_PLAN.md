@@ -105,6 +105,7 @@ Tasks (deferred):
 Objective: dynamically create Square checkout sessions from hotspot price data, eliminating per-item manual Square link setup.
 
 How it works:
+
 1. Buyer taps "Buy Now" on any priced hotspot
 2. wallgallery POSTs `{ subject, price, size? }` to a Netlify Function
 3. Netlify Function calls Square Checkout API → gets a live `checkoutUrl`
@@ -113,14 +114,15 @@ How it works:
 
 Tasks:
 
-- [ ] Set up Square developer account and sandbox credentials.
-- [ ] Create `netlify/functions/checkout.mjs` — calls Square Checkout API with item name + price.
-- [ ] Validate request shape (`subject`, `priceMinor`, `quantity`) server-side before calling Square.
-- [ ] Store `SQUARE_ACCESS_TOKEN` and `SQUARE_LOCATION_ID` as Netlify env vars (never client-side).
-- [ ] Wire wallgallery Buy button to POST to `/api/checkout` instead of opening a static link.
-- [ ] Handle Square sandbox vs. production environment switching.
-- [ ] Test with Square sandbox before going live.
-- [ ] Retire P1 `products.json` / manual link approach once P3 is validated.
+- [x] Set up Square developer account and sandbox credentials.
+- [x] Create `netlify/functions/checkout.mjs` — calls Square Checkout API with item name + price.
+- [x] Validate request shape (`subject`, `priceMinor`, `quantity`) server-side before calling Square.
+- [x] Store `SQUARE_ACCESS_TOKEN` and `SQUARE_LOCATION_ID` as Netlify env vars (never client-side).
+- [x] Wire wallgallery Buy button to POST to `/api/checkout` for all priced hotspots.
+- [ ] Sandbox E2E test — run `netlify dev`, click Buy Now, complete test payment with Square sandbox card.
+- [ ] Configure Square redirect URL back to wallgallery after payment (optional for MVP).
+- [ ] Add Netlify production env vars and deploy branch to production.
+- [ ] Retire P1 `products.json` / manual link approach once P3 is validated in production.
 
 Exit criteria:
 
