@@ -119,10 +119,10 @@ Tasks:
 - [x] Validate request shape (`subject`, `priceMinor`, `quantity`) server-side before calling Square.
 - [x] Store `SQUARE_ACCESS_TOKEN` and `SQUARE_LOCATION_ID` as Netlify env vars (never client-side).
 - [x] Wire wallgallery Buy button to POST to `/api/checkout` for all priced hotspots.
-- [ ] Sandbox E2E test — run `netlify dev`, click Buy Now, complete test payment with Square sandbox card.
+- [x] Sandbox E2E test — run `netlify dev`, click Buy Now, complete test payment with Square sandbox card.
 - [ ] Configure Square redirect URL back to wallgallery after payment (optional for MVP).
-- [ ] Add Netlify production env vars and deploy branch to production.
-- [ ] Retire P1 `products.json` / manual link approach once P3 is validated in production.
+- [x] Add Netlify production env vars and deploy branch to production.
+- [x] Retire P1 `products.json` / manual link approach once P3 is validated in production.
 
 Exit criteria:
 
